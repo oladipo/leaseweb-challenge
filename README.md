@@ -67,6 +67,41 @@ The server will start on `localhost:8080` by default.
 
 ---
 
+## Frontend Application
+
+A modern React app is provided in the `frontend` directory for searching and filtering servers via the API.
+
+### Features
+- Web form for filtering by Storage (range slider), RAM (checkboxes), Harddisk type (dropdown), and Location (dropdown)
+- Results displayed in a responsive table
+- Fast development with Vite
+- Dockerized for unified startup with backend
+
+### Local Development
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- App runs at [http://localhost:5173](http://localhost:5173) and proxies API requests to the backend.
+
+### Build & Run with Docker
+```bash
+docker build -t leaseweb-frontend ./frontend
+docker run -p 3000:80 leaseweb-frontend
+```
+- App available at [http://localhost:3000](http://localhost:3000)
+
+### Unified Startup (Docker Compose)
+From the project root:
+```bash
+docker-compose up --build
+```
+- Backend: [http://localhost:8080](http://localhost:8080)
+- Frontend: [http://localhost:3000](http://localhost:3000)
+
+---
+
 ## API Documentation
 
 ### List Servers
