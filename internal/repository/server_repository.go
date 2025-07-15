@@ -1,18 +1,19 @@
 package repository
 
 import (
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/oladipo/leaseweb-challenge/internal/models"
+	"gorm.io/gorm"
 )
 
 type ServerRepository struct {
-	db *pgxpool.Pool
+	db *gorm.DB
 }
 
-func NewServerRepository(db *pgxpool.Pool) *ServerRepository {
+func NewServerRepository(db *gorm.DB) *ServerRepository {
 	return &ServerRepository{db: db}
 }
 func (r *ServerRepository) GetAllServers() ([]models.Server, error) {
+
 	// This function will return all servers
 	// For now, we will return a placeholder response
 	return []models.Server{

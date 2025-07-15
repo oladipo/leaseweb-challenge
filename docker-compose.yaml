@@ -6,14 +6,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - STORE_TYPE=boltdb
-      - API_KEY=yourkey
-    # Uncomment below to use Redis or Postgres
-    # depends_on:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: leaseweb_challenge
+      DB_SSLMODE: disable
+    depends_on:
+      - postgres
     #   - redis
-    #   - postgres
-
-  # Example Redis service
   redis:
     image: redis:7-alpine
     ports:
@@ -25,14 +26,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: shortenit
-      POSTGRES_USER: shortenit
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: leaseweb_challenge
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-    # Uncomment to persist data
-    # volumes:
-    #   - pgdata:/var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./internal/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+  pgdata:
+    driver: local 
 
-# volumes:
-#   pgdata:
