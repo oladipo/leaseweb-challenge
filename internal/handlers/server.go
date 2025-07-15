@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/oladipo/leaseweb-challenge/internal/repository"
 )
@@ -15,22 +18,24 @@ func NewServerHandler(repo *repository.ServerRepository) *ServerHandler {
 }
 
 func (h *ServerHandler) GetServers(c *gin.Context) {
-	// This function will return all servers
-	// For now, we will return a placeholder response
 
-	servers, err := h.repo.GetAllServers()
+	// Get pagination parameters from query string
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "0"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "0"))
+
+	servers, err := h.repo.GetAllServers(page, limit)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Failed to retrieve servers"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, servers)
+	c.JSON(http.StatusOK, gin.H{"data": servers})
 }
 
 func (h *ServerHandler) FilterServers(c *gin.Context) {
 	// This function will filter servers based on criteria
 	// For now, we will return a placeholder response
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Filtered list of servers",
 	})
 }

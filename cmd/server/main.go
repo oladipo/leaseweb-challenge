@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -50,7 +51,8 @@ func registerRoutes(r *gin.Engine, serverHandler *handlers.ServerHandler) {
 }
 
 func connectDB(cfg *config.DBConfig) (*gorm.DB, error) {
-	dsn := "host=" + cfg.Host + " user=" + cfg.User + " password=" + cfg.Password + " dbname=" + cfg.DBName + " port=" + cfg.Port + " sslmode=disable"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		cfg.Host, cfg.User, cfg.Password, cfg.DBName, cfg.Port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
