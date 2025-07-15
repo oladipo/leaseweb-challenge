@@ -12,6 +12,8 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: leaseweb_challenge
       DB_SSLMODE: disable
+    volumes:
+      - ./.env:/app/.env
     depends_on:
       - postgres
     #   - redis
