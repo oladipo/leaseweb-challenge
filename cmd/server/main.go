@@ -39,7 +39,7 @@ func main() {
 	}
 	api := gin.Default()
 	// Set Gin to release mode for production
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 
 	// Set up middlewares
 	api.Use(gin.Logger())
