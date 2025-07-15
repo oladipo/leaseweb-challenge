@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/gzip"
+	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/oladipo/leaseweb-challenge/internal/config"
 	"github.com/oladipo/leaseweb-challenge/internal/handlers"
 	"github.com/oladipo/leaseweb-challenge/internal/models"
 	"github.com/oladipo/leaseweb-challenge/internal/repository"
+	"github.com/unrolled/secure"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,6 +35,10 @@ func main() {
 	// Set up middleware
 	api.Use(gin.Logger())
 	api.Use(gin.Recovery())
+	api.Use(cors.Default())                     // CORS
+	api.Use(gzip.Gzip(gzip.DefaultCompression)) // GZIP compression
+	api.Use(requestid.New())                    // Request ID
+	api.Use(secureHeaders())                    // Secure headers
 	// TODO: middlewares: CORS, JWT, Rate Limiting, Gzip, Prometheus, RequestID tracing etc. can be added here
 
 	// Initialize repository and handlers
@@ -66,4 +75,22 @@ func connectDB(cfg *config.DBConfig) (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
+
+func secureHeaders() gin.HandlerFunc {
+	secureMiddleware := secure.New(secure.Options{
+		FrameDeny:            true,
+		ContentTypeNosniff:   true,
+		BrowserXssFilter:     true,
+		SSLRedirect:          false,
+		STSSeconds:           31536000,
+		STSIncludeSubdomains: true,
+	})
+	return func(c *gin.Context) {
+		if err := secureMiddleware.Process(c.Writer, c.Request); err != nil {
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+		c.Next()
+	}
 }
