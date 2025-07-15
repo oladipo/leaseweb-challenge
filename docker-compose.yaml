@@ -15,6 +15,17 @@ services:
     depends_on:
       - postgres
     #   - redis
+
+  frontend:
+    build:
+      context: ./frontend
+    image: leaseweb-frontend:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      - leaseweb-challenge
+    # Serves the React frontend on port 3000
+
   redis:
     image: redis:7-alpine
     ports:
