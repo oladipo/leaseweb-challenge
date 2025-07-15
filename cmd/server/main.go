@@ -38,8 +38,10 @@ func main() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 	api := gin.Default()
+	// Set Gin to release mode for production
+	gin.SetMode(gin.ReleaseMode)
 
-	// Set up middleware
+	// Set up middlewares
 	api.Use(gin.Logger())
 	api.Use(gin.Recovery())
 	api.Use(cors.Default())                     // CORS
@@ -112,6 +114,6 @@ func RateLimiter() gin.HandlerFunc {
 		Period: 1 * time.Minute,
 		Limit:  60,
 	}
-	store := memory.NewStore() // In-memory (or use Redis)
+	store := memory.NewStore() // In-memory for now
 	return ginmw.NewMiddleware(limiter.New(store, rate))
 }

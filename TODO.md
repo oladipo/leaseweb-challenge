@@ -1,13 +1,26 @@
-## TO DO
+# ✅ Project To-Do List
 
-[X] - Add Unit Tests
-[X] - Add more middleware
-[X] - Implement filter endpoint
-[ ] - Add Rate Limiting
-[ ] - Add JWT Authentication
-[ ] - Add User Interface
-[ ] - Update the README.md to include instructions
-[ ] - Set app to run in release mode
-[ ] - Use redis or not?
-[ ] - Fix docker compose start up
-[ ] - Host the application
+A checklist of planned and in-progress features for the application.
+
+---
+
+## ✅ Completed
+
+- [x] Add Unit Tests  
+- [x] Add More Middleware  
+- [x] Implement Filter Endpoint  
+- [x] Add Rate Limiting  
+- [x] Set App to Run in Release Mode  
+
+---
+
+## 🚧 In Progress / Planned
+
+- [ ] Add JWT Authentication  
+- [ ] Add User Interface  
+- [ ] Update the `README.md` with instructions  
+- [ ] Decide on Redis Integration  
+- [ ] Fix Docker Compose Start-Up  
+- [ ] Host the Application  
+
+---
