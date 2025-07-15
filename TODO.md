@@ -1,3 +1,5 @@
+## TO DO
+
 [X] - Add Unit Tests
 [X] - Add more middleware
 [X] - Implement filter endpoint

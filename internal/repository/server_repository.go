@@ -1,15 +1,14 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/oladipo/leaseweb-challenge/internal/models"
 	"gorm.io/gorm"
 )
 
 // ServerRepositoryInterface allows mocking in tests
-//go:generate mockgen -destination=server_repository_mock.go -package=repository github.com/oladipo/leaseweb-challenge/internal/repository ServerRepositoryInterface
 // (manual mock will be used for now)
+//
+//go:generate mockgen -destination=server_repository_mock.go -package=repository github.com/oladipo/leaseweb-challenge/internal/repository ServerRepositoryInterface
 type ServerRepositoryInterface interface {
 	GetAllServers(page, limit int) ([]models.Server, error)
 	FilterServers(criteria map[string]string) ([]models.Server, error)
@@ -51,7 +50,6 @@ func (r *ServerRepository) FilterServers(criteria map[string]string) ([]models.S
 
 	query := r.db.Model(&models.Server{})
 
-	fmt.Printf("Applying filters: %v", criteria)
 	// Apply filters
 	for key, value := range criteria {
 		query = query.Where(key, value)

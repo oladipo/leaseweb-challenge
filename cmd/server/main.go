@@ -4,15 +4,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
+
 	"github.com/oladipo/leaseweb-challenge/internal/config"
 	"github.com/oladipo/leaseweb-challenge/internal/handlers"
 	"github.com/oladipo/leaseweb-challenge/internal/models"
 	"github.com/oladipo/leaseweb-challenge/internal/repository"
+
+	"github.com/ulule/limiter/v3"
+	ginmw "github.com/ulule/limiter/v3/drivers/middleware/gin"
+	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"github.com/unrolled/secure"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"gorm.io/driver/postgres"
@@ -40,6 +46,7 @@ func main() {
 	api.Use(gzip.Gzip(gzip.DefaultCompression)) // GZIP compression
 	api.Use(requestid.New())                    // Request ID
 	api.Use(secureHeaders())                    // Secure headers
+	api.Use(RateLimiter())                      // Rate Limiting
 	// TODO: middlewares: JWT and  Rate Limiting
 
 	// Prometheus metrics
@@ -98,4 +105,13 @@ func secureHeaders() gin.HandlerFunc {
 		}
 		c.Next()
 	}
+}
+
+func RateLimiter() gin.HandlerFunc {
+	rate := limiter.Rate{
+		Period: 1 * time.Minute,
+		Limit:  60,
+	}
+	store := memory.NewStore() // In-memory (or use Redis)
+	return ginmw.NewMiddleware(limiter.New(store, rate))
 }
