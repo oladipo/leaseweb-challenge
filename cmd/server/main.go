@@ -14,6 +14,7 @@ import (
 	"github.com/oladipo/leaseweb-challenge/internal/models"
 	"github.com/oladipo/leaseweb-challenge/internal/repository"
 	"github.com/unrolled/secure"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -39,7 +40,11 @@ func main() {
 	api.Use(gzip.Gzip(gzip.DefaultCompression)) // GZIP compression
 	api.Use(requestid.New())                    // Request ID
 	api.Use(secureHeaders())                    // Secure headers
-	// TODO: middlewares: CORS, JWT, Rate Limiting, Gzip, Prometheus, RequestID tracing etc. can be added here
+	// TODO: middlewares: JWT and  Rate Limiting
+
+	// Prometheus metrics
+	p := ginprometheus.NewPrometheus("gin_app")
+	p.Use(api)
 
 	// Initialize repository and handlers
 	serverRepo := repository.NewServerRepository(db)
