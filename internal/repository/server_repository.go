@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"time"
+	"fmt"
 
 	"github.com/oladipo/leaseweb-challenge/internal/models"
 	"gorm.io/gorm"
@@ -38,9 +38,21 @@ func (r *ServerRepository) GetAllServers(page, limit int) ([]models.Server, erro
 }
 
 func (r *ServerRepository) FilterServers(criteria map[string]string) ([]models.Server, error) {
-	// This function will filter servers based on criteria
-	// For now, we will return a placeholder response
-	return []models.Server{
-		{ID: "1", Model: "Model A", RAM: "16GB", HDD: "500GB", Location: "US", Price: "$100", CreatedAt: time.Now(), UpdatedAt: time.Now()},
-	}, nil
+
+	var servers []models.Server
+
+	query := r.db.Model(&models.Server{})
+
+	fmt.Printf("Applying filters: %v", criteria)
+	// Apply filters
+	for key, value := range criteria {
+		query = query.Where(key, value)
+	}
+
+	result := query.Find(&servers)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return servers, nil
 }

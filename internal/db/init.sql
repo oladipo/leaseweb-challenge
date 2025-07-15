@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS servers (
     ram VARCHAR(50),
     hdd VARCHAR(50),
     location VARCHAR(100),
-    price VARCHAR(20)
+    price VARCHAR(20),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insert records
