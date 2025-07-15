@@ -9,7 +9,7 @@ import (
 )
 
 type ServerHandler struct {
-	repo *repository.ServerRepository
+	repo repository.ServerRepositoryInterface
 }
 
 // FilterRequest defines the expected JSON payload for filtering servers
@@ -22,7 +22,7 @@ type FilterRequest struct {
 }
 
 // NewServerHandler creates a new ServerHandler
-func NewServerHandler(repo *repository.ServerRepository) *ServerHandler {
+func NewServerHandler(repo repository.ServerRepositoryInterface) *ServerHandler {
 	return &ServerHandler{repo: repo}
 }
 

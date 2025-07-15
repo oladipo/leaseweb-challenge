@@ -7,6 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// ServerRepositoryInterface allows mocking in tests
+//go:generate mockgen -destination=server_repository_mock.go -package=repository github.com/oladipo/leaseweb-challenge/internal/repository ServerRepositoryInterface
+// (manual mock will be used for now)
+type ServerRepositoryInterface interface {
+	GetAllServers(page, limit int) ([]models.Server, error)
+	FilterServers(criteria map[string]string) ([]models.Server, error)
+}
+
 type ServerRepository struct {
 	db *gorm.DB
 }
