@@ -3,3 +3,4 @@ backend/.air.toml
 backend/.env
 *.pem
 frontend/node_modules
+.env
