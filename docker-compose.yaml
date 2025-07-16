@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   leaseweb-challenge:
-    build: .
+    build: ./backend
     image: leaseweb-challenge:latest
     ports:
       - "8080:8080"
@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: leaseweb_challenge
       DB_SSLMODE: disable
     volumes:
-      - ./.env:/app/.env
+      - ./backend/.env:/app/.env
     depends_on:
       - postgres
     #   - redis
@@ -23,7 +23,7 @@ services:
       context: ./frontend
     image: leaseweb-frontend:latest
     ports:
-      - "3000:80"
+      - "80:80"
     depends_on:
       - leaseweb-challenge
     # Serves the React frontend on port 3000
@@ -46,7 +46,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./internal/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/internal/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
   pgdata:
     driver: local 
