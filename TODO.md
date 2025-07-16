@@ -14,6 +14,7 @@ A checklist of planned and in-progress features for the application.
 - [x] Add User Interface  
 - [x] Update the `README.md` with instructions  
 - [x] Fix Docker Compose Start-Up  
+- [X] Host the Application  
 
 ---
 
@@ -21,6 +22,5 @@ A checklist of planned and in-progress features for the application.
 
 - [ ] Add JWT Authentication  
 - [ ] Decide on Redis Integration  
-- [ ] Host the Application  
 
 ---
