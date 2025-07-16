@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oladipo/leaseweb-challenge/internal/repository"
@@ -56,9 +57,27 @@ func (h *ServerHandler) FilterServers(c *gin.Context) {
 	}
 
 	// Convert to repository filter format
-	filterMap := make(map[string]string)
+	filterMap := make(map[string]interface{})
+	// if filters.Storage != "" {
+	// 	fmt.Printf("Storage Filter: %s\n", filters.Storage)
+
+	// 	filterMap["hdd LIKE ?"] = "%" + filters.Storage + "%"
+	// }
+
 	if filters.Storage != "" {
-		filterMap["hdd LIKE ?"] = "%" + filters.Storage + "%"
+		storageGB, err := convertToGB(filters.Storage)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error":   "Invalid storage format",
+				"details": err.Error(),
+			})
+			return
+		}
+
+		// Create SQL condition to compare total storage in GB
+		filterMap["(CAST(REGEXP_REPLACE(SPLIT_PART(hdd, 'x', 1), '[^0-9]', '', 'g') AS INTEGER) * "+
+			"CASE WHEN hdd ILIKE '%TB%' THEN 1024 WHEN hdd ILIKE '%GB%' THEN 1 ELSE 0 END * "+
+			"CAST(REGEXP_REPLACE(SPLIT_PART(SPLIT_PART(hdd, 'x', 2), 'SATA', 1), '[^0-9]', '', 'g') AS INTEGER)) <= ?"] = int(storageGB)
 	}
 	if filters.RAM != "" {
 		filterMap["ram LIKE ?"] = "%" + filters.RAM + "%"
@@ -69,8 +88,6 @@ func (h *ServerHandler) FilterServers(c *gin.Context) {
 	if filters.Location != "" {
 		filterMap["location LIKE ?"] = "%" + filters.Location + "%"
 	}
-
-	fmt.Printf("Filter Map: %v", filterMap)
 	// Get filtered results
 	servers, err := h.repo.FilterServers(filterMap)
 	if err != nil {
@@ -85,4 +102,29 @@ func (h *ServerHandler) FilterServers(c *gin.Context) {
 		"count": len(servers),
 		"data":  servers,
 	})
+}
+
+// Helper function to convert storage string to GB
+func convertToGB(storage string) (float64, error) {
+	// Remove any spaces
+	storage = strings.TrimSpace(storage)
+
+	// Extract number and unit
+	var value float64
+	var unit string
+
+	_, err := fmt.Sscanf(storage, "%f%s", &value, &unit)
+	if err != nil {
+		return 0, err
+	}
+
+	// Convert to GB based on unit
+	switch strings.ToUpper(unit) {
+	case "TB":
+		return value * 1024, nil
+	case "GB":
+		return value, nil
+	default:
+		return 0, fmt.Errorf("unsupported unit: %s", unit)
+	}
 }

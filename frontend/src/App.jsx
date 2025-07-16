@@ -36,7 +36,7 @@ export default function App() {
     if (hdd) payload.hdd = hdd;
     if (location) payload.location = location;
     if (storage[0] > 0 || storage[1] < STORAGE_NUMS.length - 1) {
-      payload.storage = `${STORAGE_MARKS[storage[0]]}-${STORAGE_MARKS[storage[1]]}`;
+      payload.storage = `${STORAGE_MARKS[storage[0]]}`;
     }
     try {
       const res = await fetch('/servers/filter', {
@@ -69,7 +69,7 @@ export default function App() {
               step={1}
               list="storagemarks"
             />
-            <input
+            {/* <input
               type="range"
               min={0}
               max={STORAGE_NUMS.length - 1}
@@ -77,14 +77,14 @@ export default function App() {
               onChange={e => setStorage([storage[0], +e.target.value])}
               step={1}
               list="storagemarks"
-            />
+            /> */}
             <datalist id="storagemarks">
               {STORAGE_MARKS.map((mark, idx) => (
                 <option value={idx} label={mark} key={mark} />
               ))}
             </datalist>
             <div>
-              <span>{STORAGE_MARKS[storage[0]]}</span> - <span>{STORAGE_MARKS[storage[1]]}</span>
+              <span>{STORAGE_MARKS[storage[0]]}</span>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import (
 //go:generate mockgen -destination=server_repository_mock.go -package=repository github.com/oladipo/leaseweb-challenge/internal/repository ServerRepositoryInterface
 type ServerRepositoryInterface interface {
 	GetAllServers(page, limit int) ([]models.Server, error)
-	FilterServers(criteria map[string]string) ([]models.Server, error)
+	FilterServers(criteria map[string]interface{}) ([]models.Server, error)
 }
 
 type ServerRepository struct {
@@ -44,7 +44,7 @@ func (r *ServerRepository) GetAllServers(page, limit int) ([]models.Server, erro
 	return servers, nil
 }
 
-func (r *ServerRepository) FilterServers(criteria map[string]string) ([]models.Server, error) {
+func (r *ServerRepository) FilterServers(criteria map[string]interface{}) ([]models.Server, error) {
 
 	var servers []models.Server
 
@@ -52,7 +52,19 @@ func (r *ServerRepository) FilterServers(criteria map[string]string) ([]models.S
 
 	// Apply filters
 	for key, value := range criteria {
-		query = query.Where(key, value)
+		// query = query.Where(key, value)
+		// Handle different value types appropriately
+		switch v := value.(type) {
+		case float64:
+			// For numeric comparisons (like storage size)
+			query = query.Where(key, v)
+		case string:
+			// For string LIKE queries
+			query = query.Where(key, v)
+		default:
+			// Handle other types if needed
+			query = query.Where(key, value)
+		}
 	}
 
 	result := query.Find(&servers)
