@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -69,6 +70,7 @@ func (h *ServerHandler) FilterServers(c *gin.Context) {
 		filterMap["location LIKE ?"] = "%" + filters.Location + "%"
 	}
 
+	fmt.Printf("Filter Map: %v", filterMap)
 	// Get filtered results
 	servers, err := h.repo.FilterServers(filterMap)
 	if err != nil {

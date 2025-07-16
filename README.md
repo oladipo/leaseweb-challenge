@@ -2,6 +2,14 @@
 
 A RESTful API built with Go and Gin for managing a server inventory, including filtering and paginated listing. The app demonstrates best practices in Go web development, middleware usage, and clean architecture.
 
+---
+
+## Hosted Application
+
+You can access the live application here: [http://ec2-54-88-56-9.compute-1.amazonaws.com](http://ec2-54-88-56-9.compute-1.amazonaws.com)
+
+---
+
 ## Features
 - List all servers with pagination
 - Filter servers by hardware and location
