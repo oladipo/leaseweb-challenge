@@ -22,5 +22,5 @@ A checklist of planned and in-progress features for the application.
 
 - [ ] Add JWT Authentication  
 - [ ] Decide on Redis Integration  
-
+- [ ] Add pagination to frontend
 ---

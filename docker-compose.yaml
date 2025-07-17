@@ -11,10 +11,12 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: leaseweb_challenge
       DB_SSLMODE: disable
+      GIN_MODE: release
     volumes:
       - ./.env:/app/.env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     #   - redis
 
   frontend:
@@ -46,6 +48,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./backend/internal/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 volumes:
   pgdata:
     driver: local 
