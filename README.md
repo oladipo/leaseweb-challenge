@@ -31,7 +31,18 @@ cd leaseweb-challenge
 ```
 
 ### Configuration
-Edit the config file or set environment variables as needed. Example config is in `internal/config/config.go`.
+1. Create a `.env` file in the project root with the following variables:
+   ```env
+   POSTGRES_HOST=postgres
+   POSTGRES_PORT=5432
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_DB=leaseweb_challenge
+   DB_SSLMODE=disable
+   GIN_MODE=release
+   ```
+
+2. Alternatively, you can edit the config file or set environment variables directly. Example config is in `internal/config/config.go`.
 
 ### Database Setup
 1. Create a PostgreSQL database (e.g., `leaseweb`):
@@ -106,7 +117,7 @@ From the project root:
 docker-compose up --build
 ```
 - Backend: [http://localhost:8080](http://localhost:8080)
-- Frontend: [http://localhost:3000](http://localhost:3000)
+- Frontend: [http://localhost:80](http://localhost:80)
 
 ---
 
